@@ -1,10 +1,22 @@
+import textwrap
+from funcoes.deposito import depositar
+from funcoes.saque import sacar
+from funcoes.extrato import extrato
+from funcoes.criar_conta_corrente import criar_conta
+from funcoes.criar_user import criar_usuario
+from funcoes.listar_contas import listar_contas
+
+
 class Banco_python:
     menu = """
     --------------------------------
-    [d] Depositar
-    [s] Sacar
-    [e] Extrato
-    [q] Sair
+    [d]\t Depositar
+    [s]\t Sacar
+    [e]\t Extrato
+    [nc]\t Nova conta
+    [lc]\t Listar contas
+    [nu]\t Novo usuário
+    [q]\t Sair
     --------------------------------
     => """
     
@@ -15,57 +27,30 @@ class Banco_python:
         self.lista_extrato = []
         self.numero_saques = 0
         self.LIMITE_SAQUES = 3
+        self.AGENCIA = '0001'
+        self
     
     
     def interface_menu(self):
         while True:
             opcao = input(Banco_python.menu)
             if opcao == 'd':
-                self.depositar()
+                depositar(self)
             elif opcao == 's':
-                self.sacar()
+                sacar(self)
             elif opcao == 'e':
-                self.extrato()
+                extrato(self)
             elif opcao == 'q':
                 break
+            elif opcao == 'nc':
+                criar_conta(self)
+            elif opcao == 'lc':
+                listar_contas(self)
+            elif opcao == 'nu':
+                criar_usuario(self)
             else:
                 print("Opção inválida")
-        
-        
-    def depositar(self):
-        valor_deposito = float(input("Digite o valor do depósito: "))
-        if valor_deposito > 0:
-            self.saldo += valor_deposito
-            self.lista_extrato.append(f"Depósito: R$ {valor_deposito}")
-            print("Depósito efetuado com sucesso")
-        else:
-            print("Valor inválido")
             
-            
-    def extrato(self):
-        print("Extrato")
-        print("Saldo: R$", self.saldo)
-        print("Limite de valor por saque: R$", self.limite)
-        print("Número de saques realizados: ", self.numero_saques)
-        for item in self.lista_extrato:
-            print(item) #
-            
-            
-    def sacar(self):
-        valor_saque = float(input("Digite o valor do saque: "))
-        if valor_saque <= self.saldo:
-            if self.numero_saques < self.LIMITE_SAQUES: # Verifica se o número de saques é menor ou igual ao limite
-                if valor_saque <= self.limite:
-                    self.saldo -= valor_saque
-                    self.lista_extrato.append(f"Saque: R$ {valor_saque}")
-                    self.numero_saques += 1
-                    print("Saque efetuado com sucesso")
-                else:
-                    print("Valor de saque acima do limite")
-            else:
-                print("Limite de saques atingido")
-        else:
-            print("Saldo insuficiente")
         
     
     
@@ -73,6 +58,3 @@ class Banco_python:
 print("Bem-vindo ao Banco do Python")
 Banco_python = Banco_python() # Instanciando a classe
 Banco_python.interface_menu()
-
-
-print(Banco_python.extrato())

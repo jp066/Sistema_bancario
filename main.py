@@ -1,4 +1,3 @@
-import textwrap
 from funcoes.deposito import depositar
 from funcoes.saque import sacar
 from funcoes.extrato import extrato
@@ -37,7 +36,7 @@ class Banco_python:
             if opcao == 'd':
                 depositar(self)
             elif opcao == 's':
-                sacar(self)
+                sacar(self, saldo=1000, valor=100, limite=500, numero_saques=0, limite_saques=3)
             elif opcao == 'e':
                 extrato(self)
             elif opcao == 'q':

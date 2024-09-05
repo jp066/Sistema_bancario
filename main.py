@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from random import randint
 
 menu = """
 --------------------------------
@@ -12,17 +13,23 @@ menu = """
 --------------------------------
 => """
 
-
 class Conta:
-    def __init__(self, agencia, numero, saldo, cpf_usuario, cliente, historico):
+    def __init__(self, agencia, saldo, cliente, historico):
         self.__agencia = agencia
-        self.__numero = numero
+        self.__numero = 0
         self.__saldo = saldo
-        self.__cpf_usuario = cpf_usuario
-        self.__cliente = cliente
-        self.__historico = historico
-        
-        
+        self.__cliente = cliente  # recebe um objeto da classe Cliente
+        self.__historico = historico  # instancia da classe Historico, serve para armazenar as transações da conta na classe Conta
+
+    def gerar_agencia(self):
+        agencia = randint(1000, 2000)
+        return agencia  # randint(1000, 2000)
+
+    def inverter_agencia(self):
+        agencia = self.gerar_agencia()
+        return str(agencia)[::-1]
+
+# definindo os métodos de acesso aos atributos privados
     @property
     def agencia(self):
         return self.__agencia
@@ -39,11 +46,6 @@ class Conta:
         
         
     @property
-    def cpf_usuario(self):
-        return self.__cpf_usuario
-        
-        
-    @property
     def cliente(self):
         return self.__cliente
         
@@ -53,32 +55,30 @@ class Conta:
         return self.__historico
 
 
-    def mostrar_extrato(saldo,*, extrato):
+# definindo os métodos de alteração dos atributos privados
+    def mostrar_extrato(self, saldo, *, extrato): # tem como parâmetro obrigatório o saldo e o extrato é opcional
         print("\nExtrato:")
-        for item in extrato:
-            print(item)
+        for item in extrato: # percorre a lista de transações
+            print(item) 
         print(f"\nSaldo atual: R$ {saldo:.2f}")
-        return saldo
+        return float(saldo) # retorna o saldo como float
 
 
-    def criar_conta(*, agencia, numero, cpf_usuario):
-        conta = {
-            'agencia': agencia,
-            'numero': numero,
-            'saldo': 0,
-            'cpf_usuario': cpf_usuario
-        }
-
+    @staticmethod
+    def criar_conta(cliente, saldo, historico):
+        agencia = Conta.agencia # chama o método de classe agencia
+        numero = randint(1, 1000)
+        conta = Conta(agencia, saldo, cliente, historico)
         print('-'*30)
         print("Conta criada com sucesso")
         print(f'''Sua conta é:
             agencia: {agencia}
             numero: {numero}''')
-
         return conta
+    # nesse método, o saldo é passado como argumento, pois é o saldo inicial da conta
 
 
-    def sacar(*, saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
+    def sacar(self, *, saldo, valor, extrato, limite, numero_saques, LIMITE_SAQUES):
         if valor <= saldo:
             if numero_saques < LIMITE_SAQUES:
                 if valor <= limite:
@@ -97,7 +97,7 @@ class Conta:
         return saldo, extrato, numero_saques
 
 
-    def depositar(saldo, valor, extrato, /):
+    def depositar(self, saldo, valor, extrato, /):
         if valor > 0:
             saldo += valor
             print(f"Saldo atualizado: R$ {saldo}")
@@ -113,9 +113,28 @@ class ContaCorrente(ABC):
     def __init__(self, limite, limite_saques):
         self.limite = limite
         self.limite_saques = limite_saques
-    
-    
-cliente = Cliente('joao', '12345678901', '01/01/2000', 'rua x - 123 - bairro x - XX')
-conta = Conta(AGENCIA, numero, saldo, cliente.cpf, cliente)
 
 
+class Historico:
+    def __init__(self):
+       self.transacoes = []
+
+    def adicionar_transacao(self, transacao):
+        self.transacoes.append(transacao)
+        
+
+class Cliente:
+    def __init__(self, nome, cpf, data_nascimento, endereco):
+        self.nome = nome
+        self.cpf = cpf
+        self.data_nascimento = data_nascimento
+        self.endereco = endereco
+
+
+#agencia = '1234'
+#saldo = 1000.0
+#cliente = Cliente('nome', 'cpf', 'data_nascimento', 'endereco')
+#historico = Historico()
+## Criando a instância da classe Conta com os argumentos necessários
+#conta = Conta(agencia, saldo, cliente, historico)
+#print(conta.inverter_agencia())

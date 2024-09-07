@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from random import randint
 from datetime import datetime
 
-menu = """
+
+Imprimir_menu = """
 --------------------------------
 [nu]\t Novo usuário
 [nc]\t Nova conta
@@ -13,6 +14,22 @@ menu = """
 [q]\t Sair
 --------------------------------
 => """
+
+
+class Menu:
+    def __init__(self):
+        self.__opcao = None
+
+    @property
+    def opcao(self):
+        return self.__opcao
+
+
+    def exibir_menu(self):
+        print(Imprimir_menu) # 
+        self.__opcao = input("Escolha uma opção: ").lower()
+        return self.__opcao
+
 
 class Conta:
     def __init__(self, saldo, cliente):
@@ -107,8 +124,17 @@ class Conta:
 class ContaCorrente(Conta):
     def __init__(self, saldo, cliente, limite, limite_saques):
         super().__init__(saldo, cliente)
-        self.__limite = limite
-        self.__limite_saques = limite_saques
+        self.__limite = float(limite)
+        self.__limite_saques = int(limite_saques)
+        
+        
+    @property
+    def limite(self):
+        return self.__limite
+    
+    @property
+    def limite_saques(self):
+        return self.__limite_saques
 
 
 
@@ -208,17 +234,21 @@ class Pessoa_Fisica(Cliente):
 
 
 # Criando uma conta
-minha_conta = Conta(100.0, cliente=Cliente(endereco="Rua A, 123", contas=[]))
-
+#minha_conta = Conta(100.0, cliente=Cliente(endereco="Rua A, 123", contas=[]))
+#
 # Realizando um depósito
-deposito = Deposito(50.0)
-deposito.registrar(minha_conta)
-minha_conta.mostrar_extrato()
+#deposito = Deposito(50.0)
+#deposito.registrar(minha_conta)
+#minha_conta.mostrar_extrato()
+#
+## Realizando um saque
+#saque = Saque(30.0)
+#saque.registrar(minha_conta)
+#minha_conta.mostrar_extrato()
+#
+## Exibindo o histórico de transações
+#minha_conta.historico.imprimir()
 
-# Realizando um saque
-saque = Saque(30.0)
-saque.registrar(minha_conta)
-minha_conta.mostrar_extrato()
 
-# Exibindo o histórico de transações
-minha_conta.historico.imprimir()
+menu = Menu()
+menu.exibir_menu()
